@@ -45,10 +45,6 @@ static const char array_separator[]=",";
 /* @brief task handle for the http server */
 static TaskHandle_t task_http_server = NULL;
 
-#ifndef CONFIG_IS_RECOVERY_MODE
-#define CONFIG_IS_RECOVERY_MODE 0
-#endif
-
 /**
  * @brief embedded binary data.
  * @see file "component.mk"

@@ -55,13 +55,13 @@ Contains the freeRTOS task and all necessary support
 #include "lwip/netdb.h"
 #include "lwip/ip4_addr.h"
 
-#ifndef SQUEEZELITE_ESP32_BASE_RELEASE
-#define SQUEEZELITE_ESP32_BASE_RELEASE "unknown"
-#endif
+
 #ifndef SQUEEZELITE_ESP32_RELEASE_URL
 #define SQUEEZELITE_ESP32_RELEASE_URL "https://github.com/sle118/squeezelite-esp32/releases"
 #endif
 
+extern const char * ota_get_status();
+extern const uint8_t ota_get_pct_complete();
 
 /* objects used to manipulate the main queue of events */
 QueueHandle_t wifi_manager_queue;
@@ -406,9 +406,11 @@ void wifi_manager_clear_ip_info_json(){
 void wifi_manager_generate_ip_info_json(update_reason_code_t update_reason_code){
 	wifi_config_t *config = wifi_manager_get_wifi_sta_config();
 	if(config){
-
+#if !RECOVERY_APPLICATION
 		const char ip_info_json_format[] = ",\"ip\":\"%s\",\"netmask\":\"%s\",\"gw\":\"%s\",\"urc\":%d}\n";
-
+#else
+		const char ip_info_json_format[] = ",\"ip\":\"%s\",\"netmask\":\"%s\",\"gw\":\"%s\",\"urc\":%d, \"ota_dsc\":\"%s\", \"ota_pct\":%d}\n";
+#endif
 		memset(ip_info_json, 0x00, JSON_IP_INFO_SIZE);
 
 
